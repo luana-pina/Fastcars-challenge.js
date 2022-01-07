@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Challenge 29</title>
+</head>
+<body>
+    <div class="content">
+        <div class="companyContent">
+            <h2 class="name" data-js="companyName">Nome da empresa</h2>
+            <h4 class="number" data-js="companyNumber">(00)0000-0000</h4>
+        </div>
+        <div class="registerContent">
+            <form data-js="form">
+                <ul>
+                    <li>
+                        <label>Imagem do carro (url)</label>
+                        <input type="url" data-js="image"/>
+                    </li>
+                    <li>
+                        <label>Marca / Modelo</label>
+                        <input type="text" data-js="brand/model"/>
+                    </li>
+                    <li>
+                        <label>Ano</label>
+                        <input type="number" data-js="year"/>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <label>Placa</label>
+                        <input type="text" data-js="licensePlate"/>
+                    </li>
+                    <li>
+                        <label>Cor</label>
+                        <input type="text" data-js="color"/>
+                    </li>
+                    <li>
+                        <button type="submit" data-js="submitButton">Cadastrar</button>
+                    </li>
+                    
+                </ul>
+            </form>
+        </div>
+        <div class="tableContent">
+            <table data-js="tableCar">
+                <thead>
+                    <tr>
+                      <th>Marca/Modelo</th>
+                      <th>Ano</th>
+                      <th>Placa</th>
+                      <th>Cor</th>
+                      <th>Imagem Carro</th>                     
+                    </tr>
+                  </thead>
+            </table>
+        </div>   
+    </div>
+
+    <script src="lib_DOM.js"></script>
+    <script src="index.js"></script>
+</body>
+</html> 
