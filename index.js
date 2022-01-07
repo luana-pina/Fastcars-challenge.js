@@ -1,7 +1,6 @@
 (function(DOM, doc) {
     
     function app(){
-
         var $companyName = new DOM('[data-js="companyName"]');
         var $companyNumber = new DOM('[data-js="companyNumber"]');
         var $image = new DOM('[data-js="image"]');
@@ -12,24 +11,39 @@
         var $tableCar = new DOM('[data-js="tableCar"]');
         var $form = new DOM('[data-js="form"]');
         var car;
-        var id = 0;
+        var id;
 
         $form.on('submit', handleSubmit);
 
-        (function getCompanyValues(){     
-            var ajax = new XMLHttpRequest();       
+        (function getCompanyValues(){ 
+            var ajax = new XMLHttpRequest();           
             ajax.open('GET', `company.json`);
             ajax.send();
       
             ajax.addEventListener('readystatechange', () => {
               if(isReady(ajax)) {
                 const data = JSON.parse(ajax.responseText); 
-                console.log($companyName);
                 $companyName.get().innerText = data.name;
                 $companyNumber.get().innerText = data.phone;
               }
             });          
       
+        })();
+        (function getCars(){
+            var ajax = new XMLHttpRequest(); 
+            ajax.open('GET', 'http://localhost:3000/car');
+            ajax.send();
+            ajax.addEventListener('readystatechange', () => {
+                if(isReady(ajax)) {
+                var cars = JSON.parse(ajax.responseText);
+                cars.forEach(function(item, index) {
+                    car = item;
+                    id = index;
+                    console.log(car);
+                    $tableCar.get().appendChild(createNewRowCar());
+                });
+                }
+            });          
         })();
 
         function isReady(response){
@@ -53,9 +67,29 @@
                 licensePlate: $licensePlate.get().value,
                 color: $color.get().value,
             }
+            console.log(car)
+            saveCar();
+            if( id!== 0 )
+                id++;
             $tableCar.get().appendChild(createNewRowCar());
             clearInputs();
-            id++;
+            
+        }
+
+        function saveCar(){
+            var ajax = new XMLHttpRequest(); 
+            ajax.open('POST', 'http://localhost:3000/car');
+            ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            ajax.send(
+                `image=${car.image}&brandModel=${car.brandModel}&year=${car.year}&licensePlate=${car.licensePlate}&color=${car.color}&`
+            );
+            ajax.addEventListener('readystatechange', () => {
+                if(isReady(ajax)) {
+                    console.log(car.year)
+                    console.log(JSON.parse(ajax.responseText));
+                }
+            }); 
+
         }
 
         function createNewRowCar(){
