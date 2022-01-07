@@ -1,32 +1,3 @@
-/*
-Vamos estruturar um pequeno app utilizando módulos.
-Nosso APP vai ser um cadastro de carros. Vamos fazê-lo por partes.
-A primeira etapa vai ser o cadastro de veículos, de deverá funcionar da
-seguinte forma:
-- No início do arquivo, deverá ter as informações da sua empresa - nome e
-telefone (já vamos ver como isso vai ser feito)
-- Ao abrir a tela, ainda não teremos carros cadastrados. Então deverá ter
-um formulário para cadastro do carro, com os seguintes campos:
-  - Imagem do carro (deverá aceitar uma URL)
-  - Marca / Modelo
-  - Ano
-  - Placa
-  - Cor
-  - e um botão "Cadastrar"
-Logo abaixo do formulário, deverá ter uma tabela que irá mostrar todos os
-carros cadastrados. Ao clicar no botão de cadastrar, o novo carro deverá
-aparecer no final da tabela.
-Agora você precisa dar um nome para o seu app. Imagine que ele seja uma
-empresa que vende carros.{on the road} {82 9 2136-5785}Esse nosso app será só um catálogo, por enquanto.
-Dê um nome para a empresa e um telefone fictício, preechendo essas informações
-no arquivo company.json que já está criado.
-Essas informações devem ser adicionadas no HTML via Ajax.
-Parte técnica:
-Separe o nosso módulo de DOM criado nas últimas aulas em
-um arquivo DOM.js.
-E aqui nesse arquivo, faça a lógica para cadastrar os carros, em um módulo
-que será nomeado de "app".
-*/
 (function(DOM, doc) {
     
     function app(){
@@ -41,6 +12,7 @@ que será nomeado de "app".
         var $tableCar = new DOM('[data-js="tableCar"]');
         var $form = new DOM('[data-js="form"]');
         var car;
+        var id = 0;
 
         $form.on('submit', handleSubmit);
 
@@ -81,11 +53,12 @@ que será nomeado de "app".
                 licensePlate: $licensePlate.get().value,
                 color: $color.get().value,
             }
-            $tableCar.get().appendChild(createNewCar());
+            $tableCar.get().appendChild(createNewRowCar());
             clearInputs();
+            id++;
         }
 
-        function createNewCar(){
+        function createNewRowCar(){
             var $fragment = doc.createDocumentFragment();
             var $tr = doc.createElement('tr');
             var $tdImage = doc.createElement('td');
@@ -93,22 +66,37 @@ que será nomeado de "app".
             var $tdYear = doc.createElement('td');
             var $tdLicensePlate = doc.createElement('td');
             var $tdColor = doc.createElement('td');
+            var $tdDeleteButton = doc.createElement('td');
             var $img = doc.createElement('img');
+            $tr.setAttribute('data-js', id);
 
             $tdBrandModel.appendChild(doc.createTextNode(car.brandModel));
             $tdYear.appendChild(doc.createTextNode(car.year));
             $tdLicensePlate.appendChild(doc.createTextNode(car.licensePlate));
             $tdColor.appendChild(doc.createTextNode(car.color));
             $img.src = car.image;
-            $tdImage.appendChild($img); 
+            $tdImage.appendChild($img);
+            $tdDeleteButton.appendChild(createDeleteButton());
 
             $tr.appendChild($tdBrandModel);
             $tr.appendChild($tdYear);
             $tr.appendChild($tdLicensePlate);
             $tr.appendChild($tdColor);
             $tr.appendChild($tdImage);
-
+            $tr.appendChild($tdDeleteButton);
             return $fragment.appendChild($tr);
+        }
+        function createDeleteButton(){
+            var $deleteButton = doc.createElement('button');
+            $deleteButton.setAttribute('data-js', 'deleteButton');
+            $deleteButton.setAttribute('id', id);
+            $deleteButton.innerText = 'x';
+            $deleteButton.addEventListener('click', function(){deleteCar($deleteButton.id);}, false);
+            return $deleteButton;
+        }
+        function deleteCar(id){
+            var $tr = new DOM(`[data-js="${id}"]`);
+            $tableCar.get().removeChild($tr.get());
         }
     }
 
