@@ -3,6 +3,7 @@
 var express = require('express');
 var cors = require('cors');
 var bodyParser = require('body-parser');
+const { stringify } = require('querystring');
 var app = express();
 
 var cars = [
@@ -39,6 +40,17 @@ app.post('/car', function(req, res){
     }
     cars.push(newCar);
     res.json(cars);
+});
+
+app.delete('/car', function(req, res){
+    var carLicensePlate = req.body.licensePlate;
+    cars.forEach(function(item, index){
+        if(carLicensePlate === item.licensePlate){
+            cars.splice(index, 1);
+            return
+        }
+    });
+   console.log(cars);
 });
 
 app.listen(3000);
